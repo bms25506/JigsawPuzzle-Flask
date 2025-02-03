@@ -1,0 +1,69 @@
+<!-- 
+Main html page that users will see
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jigsaw Puzzle Game</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <h1>Welcome to the Jigsaw Puzzle Game!</h1>
+
+  <!-- Puzzle Piece Count Selector -->
+  <label for="pieceSelector">Choose number of pieces:</label>
+  <select id="pieceSelector">
+    <option value="10" {% if default_num_pieces|int == 10 %}selected{% endif %}>10 Pieces</option>
+    <option value="25" {% if default_num_pieces|int == 25 %}selected{% endif %}>25 Pieces</option>
+    <option value="50" {% if default_num_pieces|int == 50 %}selected{% endif %}>50 Pieces</option>
+    <option value="100" {% if default_num_pieces|int == 100 %}selected{% endif %}>100 Pieces</option>
+    <option value="250" {% if default_num_pieces|int == 250 %}selected{% endif %}>250 Pieces</option>
+    <option value="500" {% if default_num_pieces|int == 500 %}selected{% endif %}>500 Pieces</option>
+  </select>
+
+  <!-- Picture Upload Form -->
+  <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+    <label for="uploadImage">Upload your own image:</label>
+    <input type="file" name="image" id="uploadImage" accept="image/*">
+    <button type="submit">Upload Image</button>
+  </form>
+
+  <!-- Puzzle Canvas Container -->
+  <div id="puzzle-container">
+    <canvas id="puzzleCanvas"></canvas>
+  </div>
+
+  <!-- Result Display Area -->
+  <div id="result"></div>
+
+  <!-- Global Variables for JavaScript -->
+  <script>
+    // Set the image URL for the puzzle (from the Flask template).
+    var imageUrl = "{{ image_url }}";
+    // Set the default number of pieces (from the Flask variable).
+    var numPieces = "{{ default_num_pieces }}";
+
+    // When the piece selector changes, update the query parameters and reload.
+    document.getElementById('pieceSelector').addEventListener('change', function() {
+      var selected = this.value;
+      // Build a new query string that includes the selected numPieces.
+      var queryString = "?numPieces=" + selected;
+      // If an image is already specified, preserve it.
+      var currentUrl = new URL(window.location.href);
+      var imageParam = currentUrl.searchParams.get("image");
+      if (imageParam) {
+        queryString += "&image=" + imageParam;
+      }
+      window.location.href = queryString;
+    });
+  </script>
+
+  <!-- Include the Updated Puzzle JavaScript -->
+  <script src="{{ url_for('static', filename='js/puzzle.js') }}"></script>
+</body>
+</html>
+
+
+

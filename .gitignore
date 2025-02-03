@@ -1,0 +1,13 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment folder (change "venv" if you named it differently)
+venv/
+
+# Environment files
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
